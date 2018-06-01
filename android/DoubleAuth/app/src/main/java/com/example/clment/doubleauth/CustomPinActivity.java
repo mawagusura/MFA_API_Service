@@ -28,4 +28,6 @@ public class CustomPinActivity extends AppLockActivity {
     public int getPinLength() {
         return 4;
     }
+
+
 }
