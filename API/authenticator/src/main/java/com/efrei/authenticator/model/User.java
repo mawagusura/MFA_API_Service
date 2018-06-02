@@ -1,7 +1,5 @@
 package com.efrei.authenticator.model;
 
-import com.sun.javafx.beans.IDProperty;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,7 +9,12 @@ import java.io.Serializable;
 @Table(name = "user")
 
 public class User implements Serializable {
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -303015165520233152L;
+
+	@Id
     private String login;
 
     @NotNull
