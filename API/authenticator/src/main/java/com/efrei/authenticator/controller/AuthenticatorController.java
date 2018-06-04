@@ -6,7 +6,7 @@ import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebSiteRepository;
-import com.efrei.authentificator.service.AuthentificationService;
+import com.efrei.authenticator.services.AuthentificationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,8 @@ public class AuthenticatorController {
     @Autowired
     private AuthentificationService service;
 
+
+    /*
     @PostMapping("tokens")
     public String getToken(AuthentificationDTO dto){
     	checkNotNull(dto);
@@ -53,7 +55,8 @@ public class AuthenticatorController {
 			throw new IllegalArgumentException();
 		}	
 	}
-    
+
+
     private User getUser(AuthentificationDTO dto) {
     	List<User> users=userRepository.findAll();
     	
@@ -69,4 +72,5 @@ public class AuthenticatorController {
     	List<Website> websites= websiteRepository.findAll();
 		return null;
 	}
+	*/
 }
