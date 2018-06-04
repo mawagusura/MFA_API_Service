@@ -1,4 +1,4 @@
-package com.efrei.authenticator.dto;
+package com.efrei.authenticator.security;
 
 import com.efrei.authenticator.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class BasicUserDTO implements UserDetails {
+public class BasicUser implements UserDetails {
     private Long id;
 
     private String username;
@@ -24,7 +24,7 @@ public class BasicUserDTO implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public BasicUserDTO(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public BasicUser(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -32,12 +32,12 @@ public class BasicUserDTO implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static BasicUserDTO create(User user) {
+    public static BasicUser create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
                 new SimpleGrantedAuthority(role.getName().name())
         ).collect(Collectors.toList());
 
-        return new BasicUserDTO(
+        return new BasicUser(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -94,7 +94,7 @@ public class BasicUserDTO implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BasicUserDTO that = (BasicUserDTO) o;
+        BasicUser that = (BasicUser) o;
         return Objects.equals(id, that.id);
     }
 

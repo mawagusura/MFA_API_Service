@@ -1,6 +1,6 @@
 package com.efrei.authenticator.services;
 
-import com.efrei.authenticator.dto.BasicUserDTO;
+import com.efrei.authenticator.security.BasicUser;
 import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         new UsernameNotFoundException("User not found with username or email : " + usernameOrEmail)
                 );
 
-        return BasicUserDTO.create(user);
+        return BasicUser.create(user);
     }
 
     // This method is used by JWTAuthenticationFilter
@@ -37,6 +37,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 () -> new UsernameNotFoundException("User not found with id : " + id)
         );
 
-        return BasicUserDTO.create(user);
+        return BasicUser.create(user);
     }
 }
