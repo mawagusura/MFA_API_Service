@@ -2,6 +2,7 @@ package com.example.clment.doubleauth;
 
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.github.orangegangsters.lollipin.lib.managers.AppLockActivity;
 
@@ -21,7 +22,7 @@ public class CustomPinActivity extends AppLockActivity {
 
     @Override
     public void onPinSuccess(int attempts) {
-
+        Log.e("etape","authentification réussie");
     }
 
     @Override
