@@ -33,9 +33,15 @@ public class AuthenticatorController {
     @Autowired
     UserDetailsServiceImpl service;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequest) {
+    @PostMapping("/token")
+    public ResponseEntity<?> token(@Valid @RequestBody LoginRequestDTO loginRequest) {
     	return service.login(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO login, String url){
+    	//TODO
+    	return null;
     }
 
     @PostMapping()
