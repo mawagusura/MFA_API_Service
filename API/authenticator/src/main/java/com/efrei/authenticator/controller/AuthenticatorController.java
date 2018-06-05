@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class AuthenticatorController {
-
 
     @Autowired
     UserRepository userRepository;
@@ -39,7 +38,7 @@ public class AuthenticatorController {
     	return service.login(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
     }
 
-    @PostMapping("/register")
+    @PostMapping()
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new BasicAPIResponseDTO(false, "Username is already taken!"),
@@ -60,6 +59,5 @@ public class AuthenticatorController {
     	}
     	return service.getPincode(token);
     }
-
     
 }

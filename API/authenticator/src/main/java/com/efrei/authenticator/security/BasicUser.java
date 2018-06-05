@@ -12,7 +12,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BasicUser implements UserDetails {
-    private Long id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8966383882477984835L;
+
+	private Long id;
 
     private String username;
 

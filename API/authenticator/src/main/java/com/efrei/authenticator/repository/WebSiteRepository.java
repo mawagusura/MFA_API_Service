@@ -9,4 +9,5 @@ import com.efrei.authenticator.model.Website;
 public interface WebSiteRepository extends JpaRepository<Website, Long> {
 
 
+	Boolean existsByUrl(String url);
 }
