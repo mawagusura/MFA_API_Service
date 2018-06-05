@@ -42,7 +42,6 @@ public class CustomApplication extends Application {
      * Permet de définir le mot de passe que l'utilisateur doit enregisrer
      */
     public void setPassword(){
-        Log.e("etape","on set le password");
 
         LockManager<CustomPinActivity> lockManager = LockManager.getInstance();
         lockManager.enableAppLock(this, CustomPinActivity.class);

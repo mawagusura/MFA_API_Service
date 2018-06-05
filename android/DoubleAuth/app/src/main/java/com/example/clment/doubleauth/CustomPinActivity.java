@@ -10,6 +10,7 @@ import com.github.orangegangsters.lollipin.lib.managers.AppLockActivity;
 
 public class CustomPinActivity extends AppLockActivity {
 
+
     @Override
     public void showForgotDialog() {
 
