@@ -29,12 +29,11 @@ public class BasicUser implements UserDetails {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
     }
 
     public static BasicUser create(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
+        List<GrantedAuthority> authorities = user.getAdminWebsites().stream().map(website ->
+                new SimpleGrantedAuthority(website.getUrl())
         ).collect(Collectors.toList());
 
         return new BasicUser(
