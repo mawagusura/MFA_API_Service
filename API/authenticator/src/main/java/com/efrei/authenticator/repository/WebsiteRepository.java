@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 import com.efrei.authenticator.model.Website;
 
 @Repository
-public interface WebSiteRepository extends JpaRepository<Website, Long> {
+public interface WebsiteRepository extends JpaRepository<Website, Long> {
 
-
+	Website findByUrl(String url);
+	
 	Boolean existsByUrl(String url);
 }

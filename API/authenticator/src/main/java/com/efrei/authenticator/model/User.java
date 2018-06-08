@@ -108,4 +108,9 @@ public class User  {
     public void setAdminWebsites(Set<Website> adminWebsites) {
         this.adminWebsites = adminWebsites;
     }
+
+	public String getPincode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
