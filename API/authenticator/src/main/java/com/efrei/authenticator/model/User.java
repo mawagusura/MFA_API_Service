@@ -1,6 +1,7 @@
 package com.efrei.authenticator.model;
 
 import org.hibernate.annotations.NaturalId;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,42 +17,13 @@ import java.util.Set;
 })
 public class User  {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-
-    @NaturalId
-    @NotBlank
-    @Size(min = 3, max = 40)
     private String username;
-
-    @NaturalId
-    @NotBlank
-    @Size(max = 40)
-    @Email
     private String email;
-
-    @NotBlank
-    @Size( min = 6, max = 100)
     private String password;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_website",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "website_id"))
-    private Set<Website> websites = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "admin_website",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "website_id"))
-    private Set<Website> adminWebsites = new HashSet<>();
+    private Set<UserWebsite> websites = new HashSet<>();
+    private Set<AdminWebsite> adminWebsites = new HashSet<>();
 
     public User(){};
 
@@ -61,6 +33,10 @@ public class User  {
         this.password = password;
     }
 
+    @NaturalId
+    @NotBlank
+    @Size(max = 40)
+    @Email
     public String getEmail() {
         return email;
     }
@@ -69,6 +45,8 @@ public class User  {
         this.email = email;
     }
 
+    @NotBlank
+    @Size( min = 6, max = 100)
     public String getPassword() {
         return password;
     }
@@ -77,14 +55,15 @@ public class User  {
         this.password = password;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id;}
 
     public void setId(Long id) { this.id = id;}
 
-    public Set<Role> getRoles() { return roles;}
-
-    public void setRoles(Set<Role> roles) {this.roles = roles;}
-
+    @NaturalId
+    @NotBlank
+    @Size(min = 3, max = 40)
     public String getUsername() {
         return username;
     }
@@ -93,19 +72,21 @@ public class User  {
         this.username = username;
     }
 
-    public Set<Website> getWebsites() {
+    @OneToMany(mappedBy = "primarykey.user", cascade = CascadeType.ALL)
+    public Set<UserWebsite> getWebsites() {
         return websites;
     }
 
-    public void setWebsites(Set<Website> websites) {
+    public void setWebsites(Set<UserWebsite> websites) {
         this.websites = websites;
     }
 
-    public Set<Website> getAdminWebsites() {
+    @OneToMany(mappedBy = "primarykey.user", cascade = CascadeType.ALL)
+    public Set<AdminWebsite> getAdminWebsites() {
         return adminWebsites;
     }
 
-    public void setAdminWebsites(Set<Website> adminWebsites) {
+    public void setAdminWebsites(Set<AdminWebsite> adminWebsites) {
         this.adminWebsites = adminWebsites;
     }
 
