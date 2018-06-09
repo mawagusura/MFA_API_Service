@@ -6,18 +6,25 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.orangegangsters.lollipin.lib.PinActivity;
 import com.github.orangegangsters.lollipin.lib.managers.AppLock;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends PinActivity implements View.OnClickListener {
 
     private static final int REQUEST_CODE_ENABLE = 11;
-    static String API_URL = "https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port";
+    private String url="http://httpbin.org/post";
 
 
     @Override
@@ -63,31 +70,59 @@ public class MainActivity extends PinActivity implements View.OnClickListener {
     }
 
     private void getPassword(){
-        this.askPasswordToAPI();
-
-        CustomApplication customApplication = new CustomApplication();
-        customApplication.setPassword();
+        if(this.isTokenValid("token")) {
+            String mdp = this.askAPIForPassword("token");
+            CustomApplication customApplication = new CustomApplication();
+            customApplication.setPassword(mdp);
+        }
+        else{
+            this.finish();
+        }
 
 
     }
 
+    private String askAPIForPassword(String token){
+        RequestQueue queue = Volley.newRequestQueue(this);
 
-    public void askPasswordToAPI(){
-        ConnectionManager.getContext(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, API_URL, new Response.Listener<String>(){
 
-            @Override
-            public void onResponse(String response) {
-                Log.e("tag",response);
-            }
-        }, new Response.ErrorListener() {
+        Map<String, String> postParam= new HashMap<String, String>();
+        postParam.put("token", token);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                url, new JSONObject(postParam),
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("tag","erreur");
+                Log.d("Error.Response", "Error: " + error.getMessage());
             }
-        });
+        }) {
 
-        ConnectionManager.queue.add(stringRequest);
+            @Override
+            public Map<String, String> getHeaders(){
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+
+
+        };
+        queue.add(jsonObjReq);
+
+        return"9999"; //a changer
     }
+
+    private boolean isTokenValid(String token){
+        return true;
+    }
+
 
 }

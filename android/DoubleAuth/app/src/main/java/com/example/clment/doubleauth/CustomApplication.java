@@ -14,19 +14,12 @@ import com.github.orangegangsters.lollipin.lib.managers.LockManager;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CustomApplication extends Application {
 
-    ApiQuery apiQuery;
     private RequestQueue mRequestQueue;
-
-
-
-
-    public CustomApplication(){
-
-        this.apiQuery=new ApiQuery();
-    }
-
 
     @Override
     public void onCreate() {
@@ -36,18 +29,19 @@ public class CustomApplication extends Application {
         LockManager<CustomPinActivity> lockManager = LockManager.getInstance();
         lockManager.enableAppLock(this, CustomPinActivity.class);
         lockManager.getAppLock().setLogoId(R.drawable.security_lock);
+
     }
 
     /**
      * Permet de définir le mot de passe que l'utilisateur doit enregisrer
      */
-    public void setPassword(){
-
+    public void setPassword(String mdp){
+        CustomPinActivity.pinLength=mdp.length();
         LockManager<CustomPinActivity> lockManager = LockManager.getInstance();
         lockManager.enableAppLock(this, CustomPinActivity.class);
-
-        lockManager.getAppLock().setPasscode(apiQuery.getPassword());
-
+        lockManager.getAppLock().setPasscode(mdp);
 
     }
+
+
 }

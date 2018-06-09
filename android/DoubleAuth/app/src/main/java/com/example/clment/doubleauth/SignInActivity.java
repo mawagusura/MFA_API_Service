@@ -28,7 +28,7 @@ import java.util.Map;
 public class SignInActivity extends Activity implements View.OnClickListener{
 
     //String url = "http://authenticator-efrei.azurewebsites.net/api/auth/login";
-    String url="http://httpbin.org/post";
+    private String url="http://httpbin.org/post";
     //String url="http://localhost:8080/api/auth/login";
 
     @Override
@@ -97,8 +97,8 @@ public class SignInActivity extends Activity implements View.OnClickListener{
 
 
         Map<String, String> postParam= new HashMap<String, String>();
-        postParam.put("usernameOrEmail", "test");
-        postParam.put("password", "testefrei");
+        postParam.put("usernameOrEmail", username);
+        postParam.put("password", password);
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,

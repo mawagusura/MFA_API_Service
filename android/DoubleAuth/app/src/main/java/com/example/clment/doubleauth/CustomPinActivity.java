@@ -10,6 +10,8 @@ import com.github.orangegangsters.lollipin.lib.managers.AppLockActivity;
 
 public class CustomPinActivity extends AppLockActivity {
 
+    static int pinLength=4;
+
 
     @Override
     public void showForgotDialog() {
@@ -28,7 +30,11 @@ public class CustomPinActivity extends AppLockActivity {
 
     @Override
     public int getPinLength() {
-        return 4;
+        return pinLength;
+    }
+
+    public void test(){
+
     }
 
 
