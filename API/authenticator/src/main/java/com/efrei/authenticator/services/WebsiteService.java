@@ -1,6 +1,5 @@
 package com.efrei.authenticator.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -24,16 +23,18 @@ public class WebsiteService {
 		website.setUrl(site);
 		repository.save(website);
 		
-		
-		
+		// TODO Auto-generated method stub
 		return null;
 		
 	}
 
-	public ResponseEntity<?> getUsers(@Valid String token, @Valid String url) {
-		Website website=repository.findByUrl(url);
-		
-		
+	public ResponseEntity<?> getUsers(@Valid String token, @Valid Website website) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<?> setActionRequired(@Valid String token, @Valid Website website) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

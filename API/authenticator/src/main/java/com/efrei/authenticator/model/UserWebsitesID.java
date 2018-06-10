@@ -8,7 +8,11 @@ import java.io.Serializable;
 @Embeddable
 public class UserWebsitesID implements Serializable {
 
-    private User user;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6733278461627742372L;
+	private User user;
     private Website website;
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -1,7 +1,6 @@
 package com.efrei.authenticator.model;
 
 import org.hibernate.annotations.NaturalId;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

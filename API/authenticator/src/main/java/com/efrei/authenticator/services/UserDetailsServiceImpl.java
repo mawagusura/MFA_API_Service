@@ -98,4 +98,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
 	}
 
+	public ResponseEntity<?> getWebsitesActionRequired(@Valid String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

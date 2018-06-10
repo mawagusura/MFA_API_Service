@@ -7,6 +7,8 @@ import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.services.UserDetailsServiceImpl;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,19 +39,27 @@ public class AuthenticatorController {
     UserDetailsServiceImpl service;
 
     @PostMapping("/token")
-    public ResponseEntity<?> token(@Valid @RequestBody LoginRequestDTO loginRequest) {
+    @ApiOperation("Create token based on login entity")
+    public ResponseEntity<?> token(
+    		@ApiParam("Login entity")@Valid @RequestBody LoginRequestDTO loginRequest) {
     	return service.login(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO login, String url){
+    @ApiOperation("Login into the application")
+    public ResponseEntity<?> authenticateUser(
+    		@ApiParam("Login entity") @Valid @RequestBody LoginRequestDTO login,
+    		@ApiParam("Url of a website") @RequestParam("url") String url){
     	
     	//TODO
     	return null;
     }
 
     @PostMapping()
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
+    @ApiOperation("Register a new user based on user entity")
+    public ResponseEntity<?> registerUser(
+    		@ApiParam("User entity") @Valid @RequestBody SignUpRequestDTO signUpRequest) {
+    	
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
@@ -63,7 +73,11 @@ public class AuthenticatorController {
     }
     
     @GetMapping("/pincode")
-    public ResponseEntity<?> getPincode(@Valid @RequestParam("token") String token) {
+    @ApiOperation("Get a pincode based on token")
+    public ResponseEntity<?> getPincode(
+    		@ApiParam("Token of a user")@Valid @RequestParam("token") String token) {
+    	//TODO check the origin (good mobile???)
+    	
     	if(!tokenProvider.validateToken(token)) {
     		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
                     HttpStatus.BAD_REQUEST);
@@ -72,11 +86,24 @@ public class AuthenticatorController {
     }
     
     @GetMapping("/websites")
-    public ResponseEntity<?> getWebsites(@Valid @RequestParam("token") String token){
+    @ApiOperation("Get websites of a user based on token")
+    public ResponseEntity<?> getWebsites(
+    		@ApiParam("Token of a user") @Valid @RequestParam("token") String token){
     	if(!tokenProvider.validateToken(token)) {
     		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
                     HttpStatus.BAD_REQUEST);
     	}
     	return service.getWebsites(token);
+    }
+    
+    @GetMapping("/websites/action-required")
+    @ApiOperation("Get websites which need action based on token")
+    public ResponseEntity<?> getWebsitesActionRequired(
+    		@ApiParam("Token of a user") @Valid @RequestParam("token") String token){
+    	if(!tokenProvider.validateToken(token)) {
+    		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
+                    HttpStatus.BAD_REQUEST);
+    	}
+    	return service.getWebsitesActionRequired(token);
     }
 }
