@@ -121,6 +121,7 @@ public class WebsiteController {
 
 		return service.setActionRequired(token, website);
 	}
+	
 
 	private boolean existWebsite(String token, String url) {
 		Long id = tokenProvider.getUserIdFromJWT(token);
