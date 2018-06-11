@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 @Component
@@ -57,6 +58,8 @@ public class JwtTokenProvider {
             logger.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty.");
+        } catch (SignatureException ex){
+            logger.error("ça doit etre un pb de clé");
         }
         return false;
     }

@@ -48,7 +48,7 @@ Documentation of the API for Authenticator EFREI
 # APIs
 
 
-## /api/users
+## /api/auth
 
 
 
@@ -128,7 +128,7 @@ Documentation of the API for Authenticator EFREI
 
 
 
-## /api/users/login
+## /api/auth/login
 
 
 
@@ -221,84 +221,7 @@ Documentation of the API for Authenticator EFREI
 
 
 
-## /api/users/pincode
-
-
-### GET
-
-<a id="getPincode">Get a pincode based on token</a>
-
-
-
-
-
-
-
-
-
-#### Request
-
-
-
-##### Parameters
-
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Located in</th>
-        <th>Required</th>
-        <th>Description</th>
-        <th>Default</th>
-        <th>Schema</th>
-    </tr>
-
-
-
-<tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
-    <td> - </td>
-
-    
-            <td>string </td>
-    
-
-</tr>
-
-
-</table>
-
-
-
-#### Response
-
-
-
-
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK | |
-| 400    | Token invalid |  - |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## /api/users/token
+## /api/auth/token
 
 
 
@@ -363,6 +286,83 @@ Documentation of the API for Authenticator EFREI
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK | |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/pincode
+
+
+### GET
+
+<a id="getPincode">Get a pincode based on token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Token invalid |  - |
+
+
+
 
 
 

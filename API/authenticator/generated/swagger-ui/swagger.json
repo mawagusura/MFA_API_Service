@@ -13,7 +13,7 @@
   "basePath" : "/api",
   "schemes" : [ "http" ],
   "paths" : {
-    "/api/users" : {
+    "/api/auth" : {
       "post" : {
         "summary" : "Register a new user based on user entity",
         "description" : "",
@@ -40,7 +40,7 @@
         }
       }
     },
-    "/api/users/login" : {
+    "/api/auth/login" : {
       "post" : {
         "summary" : "Login into the application",
         "description" : "",
@@ -73,6 +73,30 @@
         }
       }
     },
+    "/api/auth/token" : {
+      "post" : {
+        "summary" : "Create token based on login entity",
+        "description" : "",
+        "operationId" : "token",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Login entity",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/LoginRequestDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
     "/api/users/pincode" : {
       "get" : {
         "summary" : "Get a pincode based on token",
@@ -94,30 +118,6 @@
           },
           "400" : {
             "description" : "Token invalid"
-          }
-        }
-      }
-    },
-    "/api/users/token" : {
-      "post" : {
-        "summary" : "Create token based on login entity",
-        "description" : "",
-        "operationId" : "token",
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "Login entity",
-          "required" : false,
-          "schema" : {
-            "$ref" : "#/definitions/LoginRequestDTO"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "type" : "object"
-            }
           }
         }
       }
