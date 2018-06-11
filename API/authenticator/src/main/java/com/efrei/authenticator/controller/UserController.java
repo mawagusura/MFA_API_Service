@@ -40,26 +40,6 @@ public class UserController {
 	
 	@Autowired
     JwtTokenProvider tokenProvider;
-	
-	@PostMapping()
-    @ApiOperation("Register a new user based on user entity")
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK", response = String.class),
-			@ApiResponse(code = 400, message = "Login is already taken") })
-    public ResponseEntity<?> registerUser(
-    		@ApiParam("User entity") @Valid @RequestBody SignUpRequestDTO signUpRequest) {
-    	
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-       return service.register(signUpRequest.getUsername(),signUpRequest.getPassword(),signUpRequest.getEmail());
-    }
     
     @GetMapping("/pincode")
     @ApiOperation("Get a pincode based on token")
