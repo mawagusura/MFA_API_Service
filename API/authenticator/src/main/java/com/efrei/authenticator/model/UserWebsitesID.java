@@ -16,7 +16,6 @@ public class UserWebsitesID implements Serializable {
     private Website website;
 
     @ManyToOne(cascade = CascadeType.ALL)
-
     public User getUser() {
         return user;
     }

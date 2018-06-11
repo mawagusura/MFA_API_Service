@@ -38,7 +38,7 @@ public class BasicUser implements UserDetails {
 
     public static BasicUser create(User user) {
         List<GrantedAuthority> authorities = user.getAdminWebsites().stream().map(website ->
-                new SimpleGrantedAuthority(website.getWebsite().getUrl())
+                new SimpleGrantedAuthority(website.getUrl())
         ).collect(Collectors.toList());
 
         return new BasicUser(

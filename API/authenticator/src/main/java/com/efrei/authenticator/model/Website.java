@@ -14,7 +14,7 @@ public class Website {
     private Long id;
     private String url;
     private Set<UserWebsite> users = new HashSet<>();
-    private Set<AdminWebsite> admins = new HashSet<>();
+    private User admin;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Website {
         this.url = url;
     }
 
-    @OneToMany(mappedBy = "primarykey.website", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryKey.website", cascade = CascadeType.ALL)
     public Set<UserWebsite> getUsers() {
         return users;
     }
@@ -45,12 +45,13 @@ public class Website {
         this.users = users;
     }
 
-    @OneToMany(mappedBy = "primarykey.website", cascade = CascadeType.ALL)
-    public Set<AdminWebsite> getAdmins() {
-        return admins;
+    @ManyToOne
+    @JoinColumn(name = "admin_id",nullable=false)
+    public User getAdmin() {
+        return admin;
     }
 
-    public void setAdmins(Set<AdminWebsite> admins) {
-        this.admins = admins;
+    public void setAdmin(User admin) {
+        this.admin = admin;
     }
 }

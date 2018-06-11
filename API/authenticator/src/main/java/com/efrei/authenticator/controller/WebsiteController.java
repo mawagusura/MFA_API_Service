@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.CreateWebsiteDTO;
-import com.efrei.authenticator.model.AdminWebsite;
 import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.model.Website;
@@ -82,16 +81,10 @@ public class WebsiteController {
 		}
 
 		// Admin
-		Set<AdminWebsite> users = website.getAdmins();
 		Long id = tokenProvider.getUserIdFromJWT(token);
-		User user = null;
-		for (AdminWebsite usr : users) {
-			if (usr.getUser().getId() == id) {
-				user = usr.getUser();
-				break;
-			}
-		}
-		if (user == null) {
+		User user = userRepository.findById(id).get();
+
+		if (user != website.getAdmin()) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not admin"),
 					HttpStatus.BAD_REQUEST);
 		}

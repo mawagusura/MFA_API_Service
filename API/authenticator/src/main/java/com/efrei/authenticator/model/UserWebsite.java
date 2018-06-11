@@ -8,7 +8,7 @@ import javax.persistence.*;
         @AssociationOverride(name = "primaryKey.user",
                 joinColumns = @JoinColumn(name = "USER_ID")),
         @AssociationOverride(name = "primaryKey.website",
-                joinColumns = @JoinColumn(name = "GROUP_ID")) })
+                joinColumns = @JoinColumn(name = "WEBSITE_ID")) })
 public class UserWebsite {
 
     private UserWebsitesID primaryKey = new UserWebsitesID();
@@ -19,6 +19,8 @@ public class UserWebsite {
     public UserWebsitesID getPrimaryKey(){
         return primaryKey;
     }
+
+    public void setPrimaryKey(UserWebsitesID id){this.primaryKey = id;}
 
     @Transient
     public User getUser(){return primaryKey.getUser();}

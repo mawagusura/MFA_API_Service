@@ -21,8 +21,9 @@ public class User  {
     private String username;
     private String email;
     private String password;
+    private String pincode;
     private Set<UserWebsite> websites = new HashSet<>();
-    private Set<AdminWebsite> adminWebsites = new HashSet<>();
+    private Set<Website> adminWebsites = new HashSet<>();
 
     public User(){};
 
@@ -71,7 +72,7 @@ public class User  {
         this.username = username;
     }
 
-    @OneToMany(mappedBy = "primarykey.user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryKey.user", cascade = CascadeType.ALL)
     public Set<UserWebsite> getWebsites() {
         return websites;
     }
@@ -80,17 +81,16 @@ public class User  {
         this.websites = websites;
     }
 
-    @OneToMany(mappedBy = "primarykey.user", cascade = CascadeType.ALL)
-    public Set<AdminWebsite> getAdminWebsites() {
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+    public Set<Website> getAdminWebsites() {
         return adminWebsites;
     }
 
-    public void setAdminWebsites(Set<AdminWebsite> adminWebsites) {
+    public void setAdminWebsites(Set<Website> adminWebsites) {
         this.adminWebsites = adminWebsites;
     }
 
-	public String getPincode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String getPincode() {return this.pincode;}
+
+	public void setPincode(String pincode){this.pincode=pincode;}
 }
