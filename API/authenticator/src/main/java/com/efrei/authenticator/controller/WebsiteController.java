@@ -1,5 +1,7 @@
 package com.efrei.authenticator.controller;
 
+import java.util.Set;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.CreateWebsiteDTO;
+import com.efrei.authenticator.model.AdminWebsite;
+import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
@@ -78,7 +82,21 @@ public class WebsiteController {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url not register"),
                     HttpStatus.BAD_REQUEST);
 		}
-		return service.getUsers(token,website);	
+		Set<AdminWebsite> users=website.getAdmins();
+		Long id=tokenProvider.getUserIdFromJWT(token);
+		User user=null;
+		for(AdminWebsite usr: users) {
+			if(usr.getUser().getId()==id) {
+				user=usr.getUser();
+				break;
+			}
+		}
+		if(user==null) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not admin"),
+                    HttpStatus.BAD_REQUEST);
+		}
+		
+		return service.getUsers(user,website);	
 	}
 	
 	@PostMapping("/action-required")

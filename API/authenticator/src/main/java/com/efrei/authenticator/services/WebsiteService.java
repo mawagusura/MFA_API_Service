@@ -28,7 +28,7 @@ public class WebsiteService {
 		
 	}
 
-	public ResponseEntity<?> getUsers(@Valid String token, @Valid Website website) {
+	public ResponseEntity<?> getUsers(@Valid User user, @Valid Website website) {
 		// TODO Auto-generated method stub
 		return null;
 	}
