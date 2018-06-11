@@ -6,17 +6,19 @@ import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.JwtAuthenticationDTO;
 import com.efrei.authenticator.dto.LoginRequestDTO;
 import com.efrei.authenticator.model.User;
+import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
 
 import java.net.URI;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	WebsiteRepository websiteRepository;
-	
+
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -68,17 +70,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public ResponseEntity<?> getPincode(String token) {
-		long id= tokenProvider.getUserIdFromJWT(token);
+		long id = tokenProvider.getUserIdFromJWT(token);
 		Optional<User> user = userRepository.findById(id);
-		
+
 		return ResponseEntity.ok(user.get().getPincode());
 	}
 
 	public ResponseEntity<?> getWebsites(@Valid String token) {
-		long id= tokenProvider.getUserIdFromJWT(token);
+		long id = tokenProvider.getUserIdFromJWT(token);
 		Optional<User> user = userRepository.findById(id);
-		
-		return ResponseEntity.ok(user.get().getWebsites());
+
+		return ResponseEntity.ok((new ArrayList<UserWebsite>()).addAll(user.get().getWebsites()));
 	}
 
 	public ResponseEntity<?> register(String username, String password, String email) {
@@ -111,14 +113,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public ResponseEntity<?> login(@Valid LoginRequestDTO login, String url) {
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(login.getUsernameOrEmail(), login.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		List<Website> websites = websiteRepository.findAll();
-		
-		
-		return null;
+		Website website = websiteRepository.findByUrl(url);
+		for (UserWebsite usr : website.getUsers()) {
+			if (usr.getUser().getUsername().equals(login.getUsernameOrEmail())
+					|| usr.getUser().getEmail().equals(login.getUsernameOrEmail())
+							&& usr.getUser().getPassword().equals(login.getPassword())) {
+				Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(login.getUsernameOrEmail(), login.getPassword()));
+
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+
+				String jwt = tokenProvider.generateToken(authentication);
+				return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
+			}
+
+		}
+		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+				HttpStatus.BAD_REQUEST);
 	}
 
 }

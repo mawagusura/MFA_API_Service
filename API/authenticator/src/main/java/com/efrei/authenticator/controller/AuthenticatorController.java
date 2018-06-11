@@ -1,15 +1,16 @@
- package com.efrei.authenticator.controller;
+package com.efrei.authenticator.controller;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.LoginRequestDTO;
-import com.efrei.authenticator.dto.SignUpRequestDTO;
-import com.efrei.authenticator.repository.UserRepository;
+import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.repository.WebsiteRepository;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.services.UserDetailsServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,84 +28,60 @@ import javax.validation.Valid;
 @RequestMapping("/api/users")
 public class AuthenticatorController {
 
-    @Autowired
-    UserRepository userRepository;
-    
-    @Autowired
-    WebsiteRepository websiteRepository;
+	@Autowired
+	JwtTokenProvider tokenProvider;
+	
+	@Autowired
+	WebsiteRepository repository;
+	
+	@Autowired
+	UserDetailsServiceImpl service;
 
-    @Autowired
-    JwtTokenProvider tokenProvider;
-    
-    @Autowired
-    UserDetailsServiceImpl service;
+	@PostMapping("/token")
+	@ApiOperation("Create token based on login entity")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
+	public ResponseEntity<?> token(@ApiParam("Login entity") @Valid @RequestBody LoginRequestDTO loginRequest) {
+		return service.getToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword());
+	}
 
-    @PostMapping("/token")
-    @ApiOperation("Create token based on login entity")
-    public ResponseEntity<?> token(
-    		@ApiParam("Login entity")@Valid @RequestBody LoginRequestDTO loginRequest) {
-    	return service.getToken(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
-    }
-    
-    @PostMapping("/login")
-    @ApiOperation("Login into the application")
-    public ResponseEntity<?> authenticateUser(
-    		@ApiParam("Login entity") @Valid @RequestBody LoginRequestDTO login,
-    		@ApiParam("Url of a website") @RequestParam("url") String url){
-    	
-    	//TODO
-    	return service.login(login, url);
-    }
+	@PostMapping("/login")
+	@ApiOperation("Login into the application")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
+			@ApiResponse(code = 400, message = "Url invalid or login invalid", response = String.class) })
+	public ResponseEntity<?> authenticateUser(@ApiParam("Login entity") @Valid @RequestBody LoginRequestDTO login,
+			@ApiParam("Url of a website") @Valid @RequestParam("url") String url) {
+		
+		if(!repository.existsByUrl(url)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		return service.login(login, url);
+	}
 
-    @PostMapping()
-    @ApiOperation("Register a new user based on user entity")
-    public ResponseEntity<?> registerUser(
-    		@ApiParam("User entity") @Valid @RequestBody SignUpRequestDTO signUpRequest) {
-    	
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+	@GetMapping("/websites")
+	@ApiOperation("Get websites of a user based on token")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Token invalid") })
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-       return service.register(signUpRequest.getUsername(),signUpRequest.getPassword(),signUpRequest.getEmail());
-    }
-    
-    @GetMapping("/pincode")
-    @ApiOperation("Get a pincode based on token")
-    public ResponseEntity<?> getPincode(
-    		@ApiParam("Token of a user")@Valid @RequestParam("token") String token) {
-    	//TODO check the origin (good mobile???)
-    	
-    	if(!tokenProvider.validateToken(token)) {
-    		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-                    HttpStatus.BAD_REQUEST);
-    	}
-    	return service.getPincode(token);
-    }
-    
-    @GetMapping("/websites")
-    @ApiOperation("Get websites of a user based on token")
-    public ResponseEntity<?> getWebsites(
-    		@ApiParam("Token of a user") @Valid @RequestParam("token") String token){
-    	if(!tokenProvider.validateToken(token)) {
-    		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-                    HttpStatus.BAD_REQUEST);
-    	}
-    	return service.getWebsites(token);
-    }
-    
-    @GetMapping("/websites/action-required")
-    @ApiOperation("Get websites which need action based on token")
-    public ResponseEntity<?> getWebsitesActionRequired(
-    		@ApiParam("Token of a user") @Valid @RequestParam("token") String token){
-    	if(!tokenProvider.validateToken(token)) {
-    		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-                    HttpStatus.BAD_REQUEST);
-    	}
-    	return service.getWebsitesActionRequired(token);
-    }
+	public ResponseEntity<?> getWebsites(@ApiParam("Token of a user") @Valid @RequestParam("token") String token) {
+		if (!tokenProvider.validateToken(token)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		return service.getWebsites(token);
+	}
+
+	@GetMapping("/websites/action-required")
+	@ApiOperation("Get websites which need action based on token")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response = UserWebsite.class, responseContainer = "List"),
+			@ApiResponse(code = 400, message = "Token invalid") })
+	public ResponseEntity<?> getWebsitesActionRequired(
+			@ApiParam("Token of a user") @Valid @RequestParam("token") String token) {
+		if (!tokenProvider.validateToken(token)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		return service.getWebsitesActionRequired(token);
+	}
 }

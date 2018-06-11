@@ -9,7 +9,7 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host" : "http://authenticator-efrei.azurewebsites.net",
+  "host" : "authenticator-efrei.azurewebsites.net",
   "basePath" : "/api",
   "schemes" : [ "http" ],
   "paths" : {
@@ -29,10 +29,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Login is already taken"
           }
         }
       }
@@ -59,10 +62,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Url invalid or login invalid"
           }
         }
       }
@@ -81,10 +87,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Token invalid"
           }
         }
       }
@@ -105,7 +114,7 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
@@ -127,10 +136,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Token invalid"
           }
         }
       }
@@ -149,10 +161,16 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/UserWebsite"
+              }
             }
+          },
+          "400" : {
+            "description" : "Token invalid"
           }
         }
       }
@@ -173,10 +191,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Token invalid or site already registered"
           }
         }
       }
@@ -201,10 +222,13 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
               "type" : "object"
             }
+          },
+          "400" : {
+            "description" : "Token invalid or url not register or user not register"
           }
         }
       }
@@ -229,10 +253,16 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/UserWebsite"
+              }
             }
+          },
+          "400" : {
+            "description" : "Token invalid or url not register or user isn't admin"
           }
         }
       }
@@ -283,6 +313,97 @@
           "type" : "string",
           "minLength" : 6,
           "maxLength" : 50
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "username" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 40
+        },
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "password" : {
+          "type" : "string",
+          "minLength" : 6,
+          "maxLength" : 100
+        },
+        "pincode" : {
+          "type" : "string"
+        },
+        "websites" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/UserWebsite"
+          }
+        },
+        "adminWebsites" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Website"
+          }
+        }
+      }
+    },
+    "UserWebsite" : {
+      "type" : "object",
+      "properties" : {
+        "primaryKey" : {
+          "$ref" : "#/definitions/UserWebsitesID"
+        },
+        "waiting" : {
+          "type" : "boolean"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        },
+        "website" : {
+          "$ref" : "#/definitions/Website"
+        }
+      }
+    },
+    "UserWebsitesID" : {
+      "type" : "object",
+      "properties" : {
+        "user" : {
+          "$ref" : "#/definitions/User"
+        },
+        "website" : {
+          "$ref" : "#/definitions/Website"
+        }
+      }
+    },
+    "Website" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "users" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/UserWebsite"
+          }
+        },
+        "admin" : {
+          "$ref" : "#/definitions/User"
         }
       }
     }

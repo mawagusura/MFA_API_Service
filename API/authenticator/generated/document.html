@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html>
+<title>API Document</title>
+
+<xmp theme="united" style="display:none;">
+#Swagger Authenticator EFREI
+
+
+## HTTP://authenticator-efrei.azurewebsites.net/api
+
+
+Documentation of the API for Authenticator EFREI
+
+
+
+**Version** v1
+
+[**Terms of Service**]()
+
+[**Apache 2.0**](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+
+
+
+
+
+
+
+# Security Definitions
+
+
+### basicAuth
+
+
+
+
+<table>
+    <tr>
+        <th>type</th>
+        <th colspan="2">basic</th>
+    </tr>
+
+</table>
+
+
+
+
+# APIs
+
+
+## /api/users
+
+
+
+
+
+
+### POST
+
+
+<a id="registerUser">Register a new user based on user entity</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>body</th>
+    <td>body</td>
+    <td>no</td>
+    <td>User entity</td>
+    <td> - </td>
+
+    <td>
+    
+    <a href="#/definitions/SignUpRequestDTO">SignUpRequestDTO</a> 
+    </td>
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Login is already taken |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/login
+
+
+
+
+
+
+### POST
+
+
+<a id="authenticateUser">Login into the application</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>body</th>
+    <td>body</td>
+    <td>no</td>
+    <td>Login entity</td>
+    <td> - </td>
+
+    <td>
+    
+    <a href="#/definitions/LoginRequestDTO">LoginRequestDTO</a> 
+    </td>
+
+</tr>
+
+<tr>
+    <th>url</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Url of a website</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Url invalid or login invalid |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/pincode
+
+
+### GET
+
+<a id="getPincode">Get a pincode based on token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Token invalid |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/token
+
+
+
+
+
+
+### POST
+
+
+<a id="token">Create token based on login entity</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>body</th>
+    <td>body</td>
+    <td>no</td>
+    <td>Login entity</td>
+    <td> - </td>
+
+    <td>
+    
+    <a href="#/definitions/LoginRequestDTO">LoginRequestDTO</a> 
+    </td>
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/websites
+
+
+### GET
+
+<a id="getWebsites">Get websites of a user based on token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Token invalid |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/websites/action-required
+
+
+### GET
+
+<a id="getWebsitesActionRequired">Get websites which need action based on token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | Array[<a href="#/definitions/UserWebsite">UserWebsite</a>]|
+| 400    | Token invalid |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/websites
+
+
+
+
+
+
+### POST
+
+
+<a id="registerWebiste">Register a website based on website entity</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>body</th>
+    <td>body</td>
+    <td>no</td>
+    <td>Website entity</td>
+    <td> - </td>
+
+    <td>
+    
+    <a href="#/definitions/CreateWebsiteDTO">CreateWebsiteDTO</a> 
+    </td>
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Token invalid or site already registered |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/websites/action-required
+
+
+
+
+
+
+### POST
+
+
+<a id="setActionRequired">Create a double verification based on url and token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+<tr>
+    <th>url</th>
+    <td>header</td>
+    <td>yes</td>
+    <td>Url of website</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | |
+| 400    | Token invalid or url not register or user not register |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/websites/users
+
+
+### GET
+
+<a id="getAllUser">Get users who are register to a specific website based on url and token</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Located in</th>
+        <th>Required</th>
+        <th>Description</th>
+        <th>Default</th>
+        <th>Schema</th>
+    </tr>
+
+
+
+<tr>
+    <th>token</th>
+    <td>query</td>
+    <td>yes</td>
+    <td>Token of a user</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+<tr>
+    <th>url</th>
+    <td>header</td>
+    <td>yes</td>
+    <td>Url of website</td>
+    <td> - </td>
+
+    
+            <td>string </td>
+    
+
+</tr>
+
+
+</table>
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | Array[<a href="#/definitions/UserWebsite">UserWebsite</a>]|
+| 400    | Token invalid or url not register or user isn&#x27;t admin |  - |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Definitions
+
+## <a name="/definitions/CreateWebsiteDTO">CreateWebsiteDTO</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>site</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>managerToken</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/LoginRequestDTO">LoginRequestDTO</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>usernameOrEmail</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>password</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/SignUpRequestDTO">SignUpRequestDTO</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>username</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>email</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>password</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/User">User</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>id</td>
+            <td>
+                
+                    
+                    integer (int64)
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>username</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>email</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>password</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>pincode</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>websites</td>
+            <td>
+                
+                
+                    array[<a href="#/definitions/UserWebsite">UserWebsite</a>]
+                
+                
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>adminWebsites</td>
+            <td>
+                
+                
+                    array[<a href="#/definitions/Website">Website</a>]
+                
+                
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/UserWebsite">UserWebsite</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>primaryKey</td>
+            <td>
+                
+                    <a href="#/definitions/UserWebsitesID">UserWebsitesID</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>waiting</td>
+            <td>
+                
+                    
+                    boolean
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>user</td>
+            <td>
+                
+                    <a href="#/definitions/User">User</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>website</td>
+            <td>
+                
+                    <a href="#/definitions/Website">Website</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/UserWebsitesID">UserWebsitesID</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>user</td>
+            <td>
+                
+                    <a href="#/definitions/User">User</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>website</td>
+            <td>
+                
+                    <a href="#/definitions/Website">Website</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/Website">Website</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>id</td>
+            <td>
+                
+                    
+                    integer (int64)
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>url</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>users</td>
+            <td>
+                
+                
+                    array[<a href="#/definitions/UserWebsite">UserWebsite</a>]
+                
+                
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>admin</td>
+            <td>
+                
+                    <a href="#/definitions/User">User</a>
+                    
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>

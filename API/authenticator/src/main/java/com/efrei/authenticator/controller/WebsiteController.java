@@ -1,7 +1,5 @@
 package com.efrei.authenticator.controller;
 
-import java.util.Set;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ import com.efrei.authenticator.services.WebsiteService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/websites")
@@ -49,6 +49,8 @@ public class WebsiteController {
 
 	@PostMapping()
 	@ApiOperation("Register a website based on website entity")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Token invalid or site already registered") })
 	public ResponseEntity<?> registerWebiste(@ApiParam("Website entity") @Valid @RequestBody CreateWebsiteDTO dto) {
 
 		if (!tokenProvider.validateToken(dto.getManagerToken())) {
@@ -66,6 +68,9 @@ public class WebsiteController {
 
 	@GetMapping("users")
 	@ApiOperation("Get users who are register to a specific website based on url and token")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response = UserWebsite.class, responseContainer = "List"),
+			@ApiResponse(code = 400, message = "Token invalid or url not register or user isn't admin") })
 	public ResponseEntity<?> getAllUser(@ApiParam("Token of a user") @Valid @RequestParam("token") String token,
 			@ApiParam("Url of website") @Valid @RequestHeader("url") String url) {
 
@@ -89,11 +94,14 @@ public class WebsiteController {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		return service.getUsers(user, website);
+		return service.getUsers(website);
 	}
 
 	@PostMapping("/action-required")
 	@ApiOperation("Create a double verification based on url and token")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Token invalid or url not register or user not register") })
 	public ResponseEntity<?> setActionRequired(@ApiParam("Token of a user") @Valid @RequestParam("token") String token,
 			@ApiParam("Url of website") @Valid @RequestHeader("url") String url) {
 
