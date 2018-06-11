@@ -1,0 +1,290 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Documentation of the API for Authenticator EFREI",
+    "version" : "v1",
+    "title" : "Swagger Authenticator EFREI",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "http://authenticator-efrei.azurewebsites.net",
+  "basePath" : "/api",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/api/users" : {
+      "post" : {
+        "summary" : "Register a new user based on user entity",
+        "description" : "",
+        "operationId" : "registerUser",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "User entity",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/SignUpRequestDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/login" : {
+      "post" : {
+        "summary" : "Login into the application",
+        "description" : "",
+        "operationId" : "authenticateUser",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Login entity",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/LoginRequestDTO"
+          }
+        }, {
+          "name" : "url",
+          "in" : "query",
+          "description" : "Url of a website",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/pincode" : {
+      "get" : {
+        "summary" : "Get a pincode based on token",
+        "description" : "",
+        "operationId" : "getPincode",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Token of a user",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/token" : {
+      "post" : {
+        "summary" : "Create token based on login entity",
+        "description" : "",
+        "operationId" : "token",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Login entity",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/LoginRequestDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/websites" : {
+      "get" : {
+        "summary" : "Get websites of a user based on token",
+        "description" : "",
+        "operationId" : "getWebsites",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Token of a user",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/users/websites/action-required" : {
+      "get" : {
+        "summary" : "Get websites which need action based on token",
+        "description" : "",
+        "operationId" : "getWebsitesActionRequired",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Token of a user",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/websites" : {
+      "post" : {
+        "summary" : "Register a website based on website entity",
+        "description" : "",
+        "operationId" : "registerWebiste",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Website entity",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/CreateWebsiteDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/websites/action-required" : {
+      "post" : {
+        "summary" : "Create a double verification based on url and token",
+        "description" : "",
+        "operationId" : "setActionRequired",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Token of a user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "url",
+          "in" : "header",
+          "description" : "Url of website",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/websites/users" : {
+      "get" : {
+        "summary" : "Get users who are register to a specific website based on url and token",
+        "description" : "",
+        "operationId" : "getAllUser",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Token of a user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "url",
+          "in" : "header",
+          "description" : "Url of website",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "basicAuth" : {
+      "type" : "basic"
+    }
+  },
+  "definitions" : {
+    "CreateWebsiteDTO" : {
+      "type" : "object",
+      "properties" : {
+        "site" : {
+          "type" : "string"
+        },
+        "managerToken" : {
+          "type" : "string"
+        }
+      }
+    },
+    "LoginRequestDTO" : {
+      "type" : "object",
+      "properties" : {
+        "usernameOrEmail" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SignUpRequestDTO" : {
+      "type" : "object",
+      "properties" : {
+        "username" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 40
+        },
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "password" : {
+          "type" : "string",
+          "minLength" : 6,
+          "maxLength" : 50
+        }
+      }
+    }
+  }
+}

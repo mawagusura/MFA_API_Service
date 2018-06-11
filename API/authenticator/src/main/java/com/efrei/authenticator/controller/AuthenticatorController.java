@@ -7,8 +7,9 @@ import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.services.UserDetailsServiceImpl;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class AuthenticatorController {
     @ApiOperation("Create token based on login entity")
     public ResponseEntity<?> token(
     		@ApiParam("Login entity")@Valid @RequestBody LoginRequestDTO loginRequest) {
-    	return service.login(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
+    	return service.getToken(loginRequest.getUsernameOrEmail(),loginRequest.getPassword());
     }
     
     @PostMapping("/login")
@@ -52,7 +53,7 @@ public class AuthenticatorController {
     		@ApiParam("Url of a website") @RequestParam("url") String url){
     	
     	//TODO
-    	return null;
+    	return service.login(login, url);
     }
 
     @PostMapping()

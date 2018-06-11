@@ -4,10 +4,14 @@ import com.efrei.authenticator.security.BasicUser;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.JwtAuthenticationDTO;
+import com.efrei.authenticator.dto.LoginRequestDTO;
 import com.efrei.authenticator.model.User;
+import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
+import com.efrei.authenticator.repository.WebsiteRepository;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -41,6 +45,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	JwtTokenProvider tokenProvider;
 
+	@Autowired
+	WebsiteRepository websiteRepository;
+	
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -88,7 +95,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.created(location).body(new BasicAPIResponseDTO(true, "User registered successfully"));
 	}
 
-	public ResponseEntity<?> login(String usernameOrEmail, String password) {
+	public ResponseEntity<?> getToken(String usernameOrEmail, String password) {
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(usernameOrEmail, password));
 
@@ -100,6 +107,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public ResponseEntity<?> getWebsitesActionRequired(@Valid String token) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<?> login(@Valid LoginRequestDTO login, String url) {
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(login.getUsernameOrEmail(), login.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		List<Website> websites = websiteRepository.findAll();
+		
+		
 		return null;
 	}
 

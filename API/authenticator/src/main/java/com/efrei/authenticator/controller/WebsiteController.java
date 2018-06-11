@@ -19,101 +19,116 @@ import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.CreateWebsiteDTO;
 import com.efrei.authenticator.model.AdminWebsite;
 import com.efrei.authenticator.model.User;
+import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.services.WebsiteService;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/websites")
 public class WebsiteController {
-	
+
 	@Autowired
-    UserRepository userRepository;
-	
+	UserRepository userRepository;
+
 	@Autowired
-    JwtTokenProvider tokenProvider;
-	
+	JwtTokenProvider tokenProvider;
+
 	@Autowired
 	WebsiteRepository websiteRepository;
 
 	@Autowired
 	WebsiteService service;
-	
+
 	@Autowired
 	WebsiteRepository repository;
-	
+
 	@PostMapping()
 	@ApiOperation("Register a website based on website entity")
-	public ResponseEntity<?> registerWebiste(
-			@ApiParam("Website entity")@Valid @RequestBody CreateWebsiteDTO dto){
-		
-		if(!tokenProvider.validateToken(dto.getManagerToken())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
-                    HttpStatus.BAD_REQUEST);
-        }		
-		if(websiteRepository.existsByUrl(dto.getSite())) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Site is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-		
-		return service.createSite(userRepository.findById(
-				tokenProvider.getUserIdFromJWT(dto.getManagerToken())),
+	public ResponseEntity<?> registerWebiste(@ApiParam("Website entity") @Valid @RequestBody CreateWebsiteDTO dto) {
+
+		if (!tokenProvider.validateToken(dto.getManagerToken())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		if (websiteRepository.existsByUrl(dto.getSite())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Site is already taken!"),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		return service.createSite(userRepository.findById(tokenProvider.getUserIdFromJWT(dto.getManagerToken())),
 				dto.getSite());
 	}
-	
+
 	@GetMapping("users")
 	@ApiOperation("Get users who are register to a specific website based on url and token")
-	public ResponseEntity<?> getAllUser(
-			@ApiParam("Token of a user")@Valid @RequestParam("token") String token,
-			@ApiParam("Url of website")@Valid @RequestHeader("url")String url){
-		
-		if(!tokenProvider.validateToken(token)) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
-                    HttpStatus.BAD_REQUEST);
-        }
-		//TODO Check the role of the user who have this token
-		
-		Website website=repository.findByUrl(url);
-		if(website == null) {
-			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url not register"),
-                    HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> getAllUser(@ApiParam("Token of a user") @Valid @RequestParam("token") String token,
+			@ApiParam("Url of website") @Valid @RequestHeader("url") String url) {
+
+		if (!tokenProvider.validateToken(token)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
+					HttpStatus.BAD_REQUEST);
 		}
-		Set<AdminWebsite> users=website.getAdmins();
-		Long id=tokenProvider.getUserIdFromJWT(token);
-		User user=null;
-		for(AdminWebsite usr: users) {
-			if(usr.getUser().getId()==id) {
-				user=usr.getUser();
+
+		Website website = repository.findByUrl(url);
+		if (website == null) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url not register"),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		// Admin
+		Set<AdminWebsite> users = website.getAdmins();
+		Long id = tokenProvider.getUserIdFromJWT(token);
+		User user = null;
+		for (AdminWebsite usr : users) {
+			if (usr.getUser().getId() == id) {
+				user = usr.getUser();
 				break;
 			}
 		}
-		if(user==null) {
+		if (user == null) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not admin"),
-                    HttpStatus.BAD_REQUEST);
+					HttpStatus.BAD_REQUEST);
 		}
-		
-		return service.getUsers(user,website);	
+
+		return service.getUsers(user, website);
 	}
-	
+
 	@PostMapping("/action-required")
 	@ApiOperation("Create a double verification based on url and token")
-	public ResponseEntity<?> setActionRequired(
-			@ApiParam("Token of a user")@Valid @RequestParam("token") String token,
-			@ApiParam("Url of website")@Valid @RequestHeader("url")String url){
-		
-		if(!tokenProvider.validateToken(token)) {
-            return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
-                    HttpStatus.BAD_REQUEST);
-        }
-		Website website=repository.findByUrl(url);
-		if(website == null) {
-			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url not register"),
-                    HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> setActionRequired(@ApiParam("Token of a user") @Valid @RequestParam("token") String token,
+			@ApiParam("Url of website") @Valid @RequestHeader("url") String url) {
+
+		if (!tokenProvider.validateToken(token)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token not valid"),
+					HttpStatus.BAD_REQUEST);
 		}
-		return service.setActionRequired(token,website);
+		Website website = repository.findByUrl(url);
+		if (website == null) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url not register"),
+					HttpStatus.BAD_REQUEST);
+		}
+		if (!existWebsite(token, url)) {
+			return new ResponseEntity<BasicAPIResponseDTO>(
+					new BasicAPIResponseDTO(false, "User not register for this website"), HttpStatus.BAD_REQUEST);
+		}
+
+		return service.setActionRequired(token, website);
+	}
+
+	private boolean existWebsite(String token, String url) {
+		Long id = tokenProvider.getUserIdFromJWT(token);
+		Website site = repository.findByUrl(url);
+		for (UserWebsite usr : site.getUsers()) {
+			if (usr.getUser().getId() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
