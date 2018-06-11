@@ -18,8 +18,20 @@ public class SignUpRequestDTO {
     @NotBlank
     @Size(min = 6, max = 50)
     private String password;
+    
+    @NotBlank
+    @Size(min = 4, max = 10)
+    private String pinCode;
 
-    public String getUsername() {
+    public String getPinCode() {
+		return pinCode;
+	}
+
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
+	}
+
+	public String getUsername() {
         return username;
     }
 
