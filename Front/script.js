@@ -1,3 +1,8 @@
+/**
+*
+* Script pour la connexion
+*/
+
 var loginOK = 'root';
 var passwordOK = 'root';
 
@@ -12,12 +17,14 @@ function checkInfo(login, password){
 		}
 	};
 
+
+
 //Envoie du JSON a l'api pour check si le login et le mdp est corect
 //Manque une entete, probleme de CORS
-function sendInfo(login,password){
-	var markers = [{ "usernameOrEmail": login, "password": password}];
+function sendInfo(usernameOrEmail,password){
+	var markers = [{ "usernameOrEmail": usernameOrEmail, "password": password}];
 
-	$.ajax({
+	$.ajax({ 
         type: "POST",
         url: "http://authenticator-efrei.azurewebsites.net/api/auth/login",
         data: JSON.stringify(markers),
@@ -25,8 +32,8 @@ function sendInfo(login,password){
         dataType: "json",
 
         // implementé ici les succes et fail
-        success: function(data){alert(data);},
-        failure: function(errMsg){alert(errMsg);}
+        success: function(data){/*document.location.href="page.html"*/alert("bjr");},
+        failure: function(errMsg){document.location.href="page.html";}
   });
 }
 
