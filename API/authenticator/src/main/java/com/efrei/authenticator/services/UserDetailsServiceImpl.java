@@ -13,6 +13,7 @@ import com.efrei.authenticator.repository.WebsiteRepository;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -83,9 +84,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.ok((new ArrayList<UserWebsite>()).addAll(user.get().getWebsites()));
 	}
 
-	public ResponseEntity<?> register(String username, String password, String email) {
+	public ResponseEntity<?> register(String username, String password, String email, String pincode) {
 		// Creating user's account
-		User user = new User(username, email, password);
+		User user = new User(username, email, password,pincode);
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -108,8 +109,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public ResponseEntity<?> getWebsitesActionRequired(@Valid String token) {
-		// TODO Auto-generated method stub
-		return null;
+		Long id=tokenProvider.getUserIdFromJWT(token);
+		Optional<User> user=userRepository.findById(id);
+		List<UserWebsite> listUser=new ArrayList<UserWebsite>();
+		for(UserWebsite usrWeb:user.get().getWebsites()) {
+			if(usrWeb.isWaiting()) {
+				listUser.add(usrWeb);
+			}
+		}
+		
+		return ResponseEntity.ok(listUser);
 	}
 
 	public ResponseEntity<?> login(@Valid LoginRequestDTO login, String url) {

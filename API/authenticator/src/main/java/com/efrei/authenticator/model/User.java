@@ -25,12 +25,12 @@ public class User  {
     private Set<UserWebsite> websites = new HashSet<>();
     private Set<Website> adminWebsites = new HashSet<>();
 
-    public User(){};
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password,String pincode) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.pincode=pincode;
     }
 
     @NaturalId
