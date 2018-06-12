@@ -55,7 +55,7 @@
           }
         }, {
           "name" : "url",
-          "in" : "query",
+          "in" : "header",
           "description" : "Url of a website",
           "required" : true,
           "type" : "string"
@@ -97,68 +97,26 @@
         }
       }
     },
-    "/api/users/pincode" : {
-      "get" : {
-        "summary" : "Get a pincode based on token",
-        "description" : "",
-        "operationId" : "getPincode",
-        "parameters" : [ {
-          "name" : "token",
-          "in" : "query",
-          "description" : "Token of a user",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "type" : "object"
-            }
-          },
-          "400" : {
-            "description" : "Token invalid"
-          }
-        }
-      }
-    },
     "/api/users/websites" : {
       "get" : {
-        "summary" : "Get websites of a user based on token",
+        "summary" : "Get websites of a user based",
         "description" : "",
         "operationId" : "getWebsites",
-        "parameters" : [ {
-          "name" : "token",
-          "in" : "query",
-          "description" : "Token of a user",
-          "required" : true,
-          "type" : "string"
-        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "schema" : {
               "type" : "object"
             }
-          },
-          "400" : {
-            "description" : "Token invalid"
           }
         }
       }
     },
     "/api/users/websites/action-required" : {
       "get" : {
-        "summary" : "Get websites which need action based on token",
+        "summary" : "Get websites which need action based",
         "description" : "",
         "operationId" : "getWebsitesActionRequired",
-        "parameters" : [ {
-          "name" : "token",
-          "in" : "query",
-          "description" : "Token of a user",
-          "required" : true,
-          "type" : "string"
-        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -168,9 +126,32 @@
                 "$ref" : "#/definitions/UserWebsite"
               }
             }
+          }
+        }
+      }
+    },
+    "/api/users/websites/validate" : {
+      "post" : {
+        "summary" : "Validate double authentification",
+        "description" : "",
+        "operationId" : "validatAuth",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ValidateDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
           },
           "400" : {
-            "description" : "Token invalid"
+            "description" : "URL not register or code invalid"
           }
         }
       }
@@ -197,23 +178,17 @@
             }
           },
           "400" : {
-            "description" : "Token invalid or site already registered"
+            "description" : "Site already registered"
           }
         }
       }
     },
     "/api/websites/action-required" : {
       "post" : {
-        "summary" : "Create a double verification based on url and token",
+        "summary" : "Create a double verification based on url",
         "description" : "",
         "operationId" : "setActionRequired",
         "parameters" : [ {
-          "name" : "token",
-          "in" : "query",
-          "description" : "Token of a user",
-          "required" : true,
-          "type" : "string"
-        }, {
           "name" : "url",
           "in" : "header",
           "description" : "Url of website",
@@ -228,23 +203,17 @@
             }
           },
           "400" : {
-            "description" : "Token invalid or url not register or user not register"
+            "description" : "Url not register or user not register"
           }
         }
       }
     },
     "/api/websites/users" : {
       "get" : {
-        "summary" : "Get users who are register to a specific website based on url and token",
+        "summary" : "Get users who are register to a specific website based on url",
         "description" : "",
         "operationId" : "getAllUser",
         "parameters" : [ {
-          "name" : "token",
-          "in" : "query",
-          "description" : "Token of a user",
-          "required" : true,
-          "type" : "string"
-        }, {
           "name" : "url",
           "in" : "header",
           "description" : "Url of website",
@@ -262,7 +231,7 @@
             }
           },
           "400" : {
-            "description" : "Token invalid or url not register or user isn't admin"
+            "description" : "Url not register or user isn't admin"
           }
         }
       }
@@ -313,6 +282,11 @@
           "type" : "string",
           "minLength" : 6,
           "maxLength" : 50
+        },
+        "pinCode" : {
+          "type" : "string",
+          "minLength" : 4,
+          "maxLength" : 10
         }
       }
     },
@@ -366,11 +340,11 @@
         "waiting" : {
           "type" : "boolean"
         },
-        "user" : {
-          "$ref" : "#/definitions/User"
-        },
         "website" : {
           "$ref" : "#/definitions/Website"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
         }
       }
     },
@@ -382,6 +356,17 @@
         },
         "website" : {
           "$ref" : "#/definitions/Website"
+        }
+      }
+    },
+    "ValidateDTO" : {
+      "type" : "object",
+      "properties" : {
+        "pinecode" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
         }
       }
     },

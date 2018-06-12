@@ -182,7 +182,7 @@ Documentation of the API for Authenticator EFREI
 
 <tr>
     <th>url</th>
-    <td>query</td>
+    <td>header</td>
     <td>yes</td>
     <td>Url of a website</td>
     <td> - </td>
@@ -300,89 +300,12 @@ Documentation of the API for Authenticator EFREI
 
 
 
-## /api/users/pincode
-
-
-### GET
-
-<a id="getPincode">Get a pincode based on token</a>
-
-
-
-
-
-
-
-
-
-#### Request
-
-
-
-##### Parameters
-
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Located in</th>
-        <th>Required</th>
-        <th>Description</th>
-        <th>Default</th>
-        <th>Schema</th>
-    </tr>
-
-
-
-<tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
-    <td> - </td>
-
-    
-            <td>string </td>
-    
-
-</tr>
-
-
-</table>
-
-
-
-#### Response
-
-
-
-
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK | |
-| 400    | Token invalid |  - |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## /api/users/websites
 
 
 ### GET
 
-<a id="getWebsites">Get websites of a user based on token</a>
+<a id="getWebsites">Get websites of a user based</a>
 
 
 
@@ -398,33 +321,8 @@ Documentation of the API for Authenticator EFREI
 
 ##### Parameters
 
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Located in</th>
-        <th>Required</th>
-        <th>Description</th>
-        <th>Default</th>
-        <th>Schema</th>
-    </tr>
 
 
-
-<tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
-    <td> - </td>
-
-    
-            <td>string </td>
-    
-
-</tr>
-
-
-</table>
 
 
 
@@ -436,7 +334,6 @@ Documentation of the API for Authenticator EFREI
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK | |
-| 400    | Token invalid |  - |
 
 
 
@@ -459,7 +356,63 @@ Documentation of the API for Authenticator EFREI
 
 ### GET
 
-<a id="getWebsitesActionRequired">Get websites which need action based on token</a>
+<a id="getWebsitesActionRequired">Get websites which need action based</a>
+
+
+
+
+
+
+
+
+
+#### Request
+
+
+
+##### Parameters
+
+
+
+
+
+
+#### Response
+
+
+
+
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK | Array[<a href="#/definitions/UserWebsite">UserWebsite</a>]|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## /api/users/websites/validate
+
+
+
+
+
+
+### POST
+
+
+<a id="validatAuth">Validate double authentification</a>
 
 
 
@@ -488,15 +441,16 @@ Documentation of the API for Authenticator EFREI
 
 
 <tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
+    <th>body</th>
+    <td>body</td>
+    <td>no</td>
+    <td></td>
     <td> - </td>
 
+    <td>
     
-            <td>string </td>
-    
+    <a href="#/definitions/ValidateDTO">ValidateDTO</a> 
+    </td>
 
 </tr>
 
@@ -512,11 +466,8 @@ Documentation of the API for Authenticator EFREI
 
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
-| 200    | OK | Array[<a href="#/definitions/UserWebsite">UserWebsite</a>]|
-| 400    | Token invalid |  - |
-
-
-
+| 200    | OK | |
+| 400    | URL not register or code invalid |  - |
 
 
 
@@ -596,7 +547,7 @@ Documentation of the API for Authenticator EFREI
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK | |
-| 400    | Token invalid or site already registered |  - |
+| 400    | Site already registered |  - |
 
 
 
@@ -621,7 +572,7 @@ Documentation of the API for Authenticator EFREI
 ### POST
 
 
-<a id="setActionRequired">Create a double verification based on url and token</a>
+<a id="setActionRequired">Create a double verification based on url</a>
 
 
 
@@ -648,19 +599,6 @@ Documentation of the API for Authenticator EFREI
     </tr>
 
 
-
-<tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
-    <td> - </td>
-
-    
-            <td>string </td>
-    
-
-</tr>
 
 <tr>
     <th>url</th>
@@ -688,7 +626,7 @@ Documentation of the API for Authenticator EFREI
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK | |
-| 400    | Token invalid or url not register or user not register |  - |
+| 400    | Url not register or user not register |  - |
 
 
 
@@ -708,7 +646,7 @@ Documentation of the API for Authenticator EFREI
 
 ### GET
 
-<a id="getAllUser">Get users who are register to a specific website based on url and token</a>
+<a id="getAllUser">Get users who are register to a specific website based on url</a>
 
 
 
@@ -737,19 +675,6 @@ Documentation of the API for Authenticator EFREI
 
 
 <tr>
-    <th>token</th>
-    <td>query</td>
-    <td>yes</td>
-    <td>Token of a user</td>
-    <td> - </td>
-
-    
-            <td>string </td>
-    
-
-</tr>
-
-<tr>
     <th>url</th>
     <td>header</td>
     <td>yes</td>
@@ -775,7 +700,7 @@ Documentation of the API for Authenticator EFREI
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK | Array[<a href="#/definitions/UserWebsite">UserWebsite</a>]|
-| 400    | Token invalid or url not register or user isn&#x27;t admin |  - |
+| 400    | Url not register or user isn&#x27;t admin |  - |
 
 
 
@@ -913,6 +838,19 @@ Documentation of the API for Authenticator EFREI
     
         <tr>
             <td>password</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>pinCode</td>
             <td>
                 
                     
@@ -1072,10 +1010,10 @@ Documentation of the API for Authenticator EFREI
         </tr>
     
         <tr>
-            <td>user</td>
+            <td>website</td>
             <td>
                 
-                    <a href="#/definitions/User">User</a>
+                    <a href="#/definitions/Website">Website</a>
                     
                 
             </td>
@@ -1085,10 +1023,10 @@ Documentation of the API for Authenticator EFREI
         </tr>
     
         <tr>
-            <td>website</td>
+            <td>user</td>
             <td>
                 
-                    <a href="#/definitions/Website">Website</a>
+                    <a href="#/definitions/User">User</a>
                     
                 
             </td>
@@ -1129,6 +1067,45 @@ Documentation of the API for Authenticator EFREI
                 
                     <a href="#/definitions/Website">Website</a>
                     
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+</table>
+
+## <a name="/definitions/ValidateDTO">ValidateDTO</a>
+
+<table border="1">
+    <tr>
+        <th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>example</th>
+    </tr>
+    
+        <tr>
+            <td>pinecode</td>
+            <td>
+                
+                    
+                    string
+                
+            </td>
+            <td>optional</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    
+        <tr>
+            <td>url</td>
+            <td>
+                
+                    
+                    string
                 
             </td>
             <td>optional</td>
