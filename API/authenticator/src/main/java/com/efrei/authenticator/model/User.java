@@ -25,6 +25,7 @@ public class User  {
     private Set<UserWebsite> websites = new HashSet<>();
     private Set<Website> adminWebsites = new HashSet<>();
 
+    public User(){};
 
     public User(String username, String email, String password,String pincode) {
         this.username = username;

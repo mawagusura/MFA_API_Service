@@ -70,11 +70,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return BasicUser.create(user);
 	}
 
-	public ResponseEntity<?> getPincode(String token) {
-		long id = tokenProvider.getUserIdFromJWT(token);
-		Optional<User> user = userRepository.findById(id);
+	public ResponseEntity<?> getPincode(String username) {
 
-		return ResponseEntity.ok(user.get().getPincode());
+		Optional<User> user = userRepository.findByUsername(username);
+
+		return ResponseEntity.ok(new BasicAPIResponseDTO(true,user.get().getPincode()));
 	}
 
 	public ResponseEntity<?> getWebsites(@Valid String token) {

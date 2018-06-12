@@ -2,9 +2,13 @@ package com.efrei.authenticator.controller;
 
 import javax.validation.Valid;
 
+import com.efrei.authenticator.security.BasicUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,15 +48,11 @@ public class UserController {
     @ApiResponses(value = {
 			@ApiResponse(code = 200, message = "OK", response = String.class),
 			@ApiResponse(code = 400, message = "Token invalid") })
-    public ResponseEntity<?> getPincode(
-    		@ApiParam("Token of a user")@Valid @RequestParam("token") String token) {
-    	//TODO check the origin (good mobile???)
-    	
-    	if(!tokenProvider.validateToken(token)) {
-    		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-                    HttpStatus.BAD_REQUEST);
-    	}
-    	return service.getPincode(token);
+    public ResponseEntity<?> getPincode() {
+
+		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
+    	return service.getPincode(username);
     }
     
     
