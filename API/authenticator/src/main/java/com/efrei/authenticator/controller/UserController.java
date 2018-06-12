@@ -65,10 +65,11 @@ public class UserController {
 	@PostMapping("/websites/validate")
 	@ApiOperation("Validate double authentification")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK", response =Object.class),
+			@ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "URL not register or code invalid")
 	})
 	public ResponseEntity<?> validatAuth(@Valid @RequestBody()ValidateDTO dto){
+		
 		if(websiteRepository.existsByUrl(dto.getUrl())) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "URL not register"),
                     HttpStatus.BAD_REQUEST);
