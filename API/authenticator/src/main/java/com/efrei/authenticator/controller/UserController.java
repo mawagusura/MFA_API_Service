@@ -7,13 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
-import com.efrei.authenticator.dto.SignUpRequestDTO;
 import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
@@ -85,6 +83,11 @@ public class UserController {
 		return service.getWebsitesActionRequired(token);
 	}
 	
-//	@PostMapping("/websites/validate")
-//	@ApiOperation("")
+	
+	@PostMapping("/websites/validate")
+	@ApiOperation("Validate double authentification")
+	public ResponseEntity<?> validatAuth(@Valid @RequestParam("tokens")String tokenMobile, String tokenUser ){
+		//TODO
+		return null;
+	}
 }

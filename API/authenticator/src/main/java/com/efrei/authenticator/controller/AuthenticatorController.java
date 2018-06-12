@@ -18,8 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -52,7 +52,7 @@ public class AuthenticatorController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
 			@ApiResponse(code = 400, message = "Url invalid or login invalid", response = String.class) })
 	public ResponseEntity<?> authenticateUser(@ApiParam("Login entity") @Valid @RequestBody LoginRequestDTO login,
-			@ApiParam("Url of a website") @Valid @RequestParam("url") String url) {
+			@ApiParam("Url of a website") @Valid @RequestHeader("url") String url) {
 		
 		if(!repository.existsByUrl(url)) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url invalid"),
@@ -78,7 +78,7 @@ public class AuthenticatorController {
             return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
-        return service.register(signUpRequest.getUsername(),signUpRequest.getPassword(),signUpRequest.getEmail());
+        return service.register(signUpRequest.getUsername(),signUpRequest.getPassword(),signUpRequest.getEmail(),signUpRequest.getPinCode());
     }
 	
 }
