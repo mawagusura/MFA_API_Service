@@ -4,18 +4,17 @@ import javax.validation.Valid;
 
 import com.efrei.authenticator.security.BasicUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
+import com.efrei.authenticator.dto.ValidateDTO;
 import com.efrei.authenticator.model.UserWebsite;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
@@ -23,7 +22,6 @@ import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.services.UserDetailsServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -43,51 +41,44 @@ public class UserController {
 	@Autowired
     JwtTokenProvider tokenProvider;
     
-    @GetMapping("/pincode")
-    @ApiOperation("Get a pincode based on token")
-    @ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK", response = String.class),
-			@ApiResponse(code = 400, message = "Token invalid") })
-    public ResponseEntity<?> getPincode() {
-
-		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-
-    	return service.getPincode(username);
-    }
-    
     
     @GetMapping("/websites")
-	@ApiOperation("Get websites of a user based on token")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 400, message = "Token invalid") })
+	@ApiOperation("Get websites of a user based")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 
-	public ResponseEntity<?> getWebsites(@ApiParam("Token of a user") @Valid @RequestParam("token") String token) {
-		if (!tokenProvider.validateToken(token)) {
-			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-					HttpStatus.BAD_REQUEST);
-		}
-		return service.getWebsites(token);
+	public ResponseEntity<?> getWebsites() {
+    	String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
+		return service.getWebsites(username);
 	}
 
 	@GetMapping("/websites/action-required")
-	@ApiOperation("Get websites which need action based on token")
+	@ApiOperation("Get websites which need action based")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "OK", response = UserWebsite.class, responseContainer = "List"),
-			@ApiResponse(code = 400, message = "Token invalid") })
-	public ResponseEntity<?> getWebsitesActionRequired(
-			@ApiParam("Token of a user") @Valid @RequestParam("token") String token) {
-		if (!tokenProvider.validateToken(token)) {
-			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Token invalid"),
-					HttpStatus.BAD_REQUEST);
-		}
-		return service.getWebsitesActionRequired(token);
+			@ApiResponse(code = 200, message = "OK", response = UserWebsite.class, responseContainer = "List")})
+	public ResponseEntity<?> getWebsitesActionRequired() {
+		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		return service.getWebsitesActionRequired(username);
 	}
 	
 	
 	@PostMapping("/websites/validate")
 	@ApiOperation("Validate double authentification")
-	public ResponseEntity<?> validatAuth(@Valid @RequestParam("tokens")String tokenMobile, String tokenUser ){
-		//TODO
-		return null;
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response =Object.class),
+			@ApiResponse(code = 400, message = "URL not register or code invalid")
+	})
+	public ResponseEntity<?> validatAuth(@Valid @RequestBody()ValidateDTO dto){
+		if(websiteRepository.existsByUrl(dto.getUrl())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "URL not register"),
+                    HttpStatus.BAD_REQUEST);
+		}
+		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		if(dto.getPinecode().equals(userRepository.findByUsername(username).get().getPincode())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Code invalid"),
+                    HttpStatus.BAD_REQUEST);
+		}
+		
+		return service.validate(dto.getPinecode(),dto.getUrl(),username);
 	}
 }

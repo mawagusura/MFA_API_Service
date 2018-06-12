@@ -141,4 +141,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				HttpStatus.BAD_REQUEST);
 	}
 
+	public ResponseEntity<?> validate(String pinecode, String url,String username) {
+		Website website=websiteRepository.findByUrl(url);
+		for(UserWebsite usr:website.getUsers()) {
+			if(usr.getUser().getUsername().equals(username)) {
+				usr.setWaiting(false);
+				return ResponseEntity.ok("OK");
+			}
+		}
+		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not register to this site"),
+                HttpStatus.BAD_REQUEST);
+	}
+
 }
