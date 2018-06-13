@@ -32,16 +32,6 @@ public class CustomApplication extends Application {
 
     }
 
-    /**
-     * Permet de définir le mot de passe que l'utilisateur doit enregisrer
-     */
-    public void setPassword(String mdp){
-        CustomPinActivity.pinLength=mdp.length();
-        LockManager<CustomPinActivity> lockManager = LockManager.getInstance();
-        lockManager.enableAppLock(this, CustomPinActivity.class);
-        lockManager.getAppLock().setPasscode(mdp);
-
-    }
 
 
 }
