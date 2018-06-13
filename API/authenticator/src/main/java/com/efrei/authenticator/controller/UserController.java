@@ -2,6 +2,7 @@ package com.efrei.authenticator.controller;
 
 import javax.validation.Valid;
 
+import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.security.BasicUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,18 +69,19 @@ public class UserController {
 			@ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "URL not register or code invalid")
 	})
-	public ResponseEntity<?> validatAuth(@Valid @RequestBody()ValidateDTO dto){
+	public ResponseEntity<?> validateAuth(@Valid @RequestBody()ValidateDTO dto){
 		
-		if(websiteRepository.existsByUrl(dto.getUrl())) {
+		if(!websiteRepository.existsByUrl(dto.getUrl())) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "URL not register"),
                     HttpStatus.BAD_REQUEST);
 		}
 		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		if(dto.getPinecode().equals(userRepository.findByUsername(username).get().getPincode())) {
+		User user = userRepository.findByUsername(username).get();
+		if(!dto.getPinCode().equals(user.getPincode())) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Code invalid"),
                     HttpStatus.BAD_REQUEST);
 		}
 		
-		return service.validate(dto.getPinecode(),dto.getUrl(),username);
+		return service.validate(dto.getUrl(),user);
 	}
 }

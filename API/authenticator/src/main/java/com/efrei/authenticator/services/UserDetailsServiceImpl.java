@@ -77,9 +77,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.ok(new BasicAPIResponseDTO(true,user.get().getPincode()));
 	}
 
-	public ResponseEntity<?> getWebsites(@Valid String token) {
-		long id = tokenProvider.getUserIdFromJWT(token);
-		Optional<User> user = userRepository.findById(id);
+	public ResponseEntity<?> getWebsites(@Valid String username) {
+		Optional<User> user = userRepository.findByUsername(username);
 
 		return ResponseEntity.ok((new ArrayList<UserWebsite>()).addAll(user.get().getWebsites()));
 	}
@@ -108,20 +107,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
 	}
 
-	public ResponseEntity<?> getWebsitesActionRequired(@Valid String token) {
-		Long id=tokenProvider.getUserIdFromJWT(token);
-		Optional<User> user=userRepository.findById(id);
-		List<UserWebsite> listUser=new ArrayList<UserWebsite>();
+	public ResponseEntity<?> getWebsitesActionRequired(@Valid String username) {
+
+		Optional<User> user=userRepository.findByUsername(username);
+		ArrayList<Website> listUser=new ArrayList<>();
 		for(UserWebsite usrWeb:user.get().getWebsites()) {
 			if(usrWeb.isWaiting()) {
-				listUser.add(usrWeb);
+				listUser.add(usrWeb.getWebsite());
 			}
 		}
 		
 		return ResponseEntity.ok(listUser);
 	}
 
-	public ResponseEntity<?> login(@Valid LoginRequestDTO login, String url) {
+	public ResponseEntity<?> login(@Valid LoginRequestDTO login, @Valid String url) {
 		Website website = websiteRepository.findByUrl(url);
 		for (UserWebsite usr : website.getUsers()) {
 			if (usr.getUser().getUsername().equals(login.getUsernameOrEmail())
@@ -132,21 +131,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 
+				usr.setWaiting(true);
+				websiteRepository.save(website);
+
 				String jwt = tokenProvider.generateToken(authentication);
 				return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
 			}
 
 		}
-		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login or password invalid"),
 				HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<?> validate(String pinecode, String url,String username) {
+	public ResponseEntity<?> validate( String url,User user) {
 		Website website=websiteRepository.findByUrl(url);
-		for(UserWebsite usr:website.getUsers()) {
-			if(usr.getUser().getUsername().equals(username)) {
+
+		for(UserWebsite usr:user.getWebsites()) {
+			if(usr.getWebsite().getUrl().equals(url)){
 				usr.setWaiting(false);
-				return ResponseEntity.ok("OK");
+				userRepository.save(user);
+				return ResponseEntity.ok(new BasicAPIResponseDTO(true, "Connection to this website validated."));
 			}
 		}
 		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not register to this site"),

@@ -2,16 +2,16 @@ package com.efrei.authenticator.dto;
 
 public class ValidateDTO {
 
-	private String pinecode;
+	private String pinCode;
 	
 	private String url;
 
-	public String getPinecode() {
-		return pinecode;
+	public String getPinCode() {
+		return pinCode;
 	}
 
-	public void setPinecode(String pinecode) {
-		this.pinecode = pinecode;
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
 	}
 
 	public String getUrl() {

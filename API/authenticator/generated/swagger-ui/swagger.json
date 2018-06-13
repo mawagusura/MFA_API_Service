@@ -134,7 +134,7 @@
       "post" : {
         "summary" : "Validate double authentification",
         "description" : "",
-        "operationId" : "validatAuth",
+        "operationId" : "validateAuth",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -362,7 +362,7 @@
     "ValidateDTO" : {
       "type" : "object",
       "properties" : {
-        "pinecode" : {
+        "pinCode" : {
           "type" : "string"
         },
         "url" : {
@@ -373,22 +373,8 @@
     "Website" : {
       "type" : "object",
       "properties" : {
-        "id" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "url" : {
           "type" : "string"
-        },
-        "users" : {
-          "type" : "array",
-          "uniqueItems" : true,
-          "items" : {
-            "$ref" : "#/definitions/UserWebsite"
-          }
-        },
-        "admin" : {
-          "$ref" : "#/definitions/User"
         }
       }
     }

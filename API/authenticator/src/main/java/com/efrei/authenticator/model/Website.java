@@ -1,15 +1,17 @@
 package com.efrei.authenticator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "website", uniqueConstraints = { @UniqueConstraint(columnNames = {"url"})})
-public class Website {
+public class Website implements Serializable {
 
     private Long id;
     private String url;
@@ -18,6 +20,7 @@ public class Website {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -37,6 +40,7 @@ public class Website {
     }
 
     @OneToMany(mappedBy = "primaryKey.website", cascade = CascadeType.ALL)
+    @JsonIgnore
     public Set<UserWebsite> getUsers() {
         return users;
     }
@@ -47,6 +51,7 @@ public class Website {
 
     @ManyToOne
     @JoinColumn(name = "admin_id",nullable=false)
+    @JsonIgnore
     public User getAdmin() {
         return admin;
     }
