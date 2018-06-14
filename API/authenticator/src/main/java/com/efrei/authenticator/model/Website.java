@@ -13,7 +13,11 @@ import java.util.Set;
 @Table(name = "website", uniqueConstraints = { @UniqueConstraint(columnNames = {"url"})})
 public class Website implements Serializable {
 
-    private Long id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4280315952148745859L;
+	private Long id;
     private String url;
     private Set<UserWebsite> users = new HashSet<>();
     private User admin;

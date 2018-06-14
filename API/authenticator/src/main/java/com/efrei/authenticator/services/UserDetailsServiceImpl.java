@@ -13,7 +13,6 @@ import com.efrei.authenticator.repository.WebsiteRepository;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -144,8 +143,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public ResponseEntity<?> validate( String url,User user) {
-		Website website=websiteRepository.findByUrl(url);
-
 		for(UserWebsite usr:user.getWebsites()) {
 			if(usr.getWebsite().getUrl().equals(url)){
 				usr.setWaiting(false);

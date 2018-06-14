@@ -1,6 +1,5 @@
 package com.efrei.authenticator.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -16,7 +15,13 @@ import java.io.Serializable;
 public class UserWebsite implements Serializable {
 
 
-    private UserWebsitesID primaryKey = new UserWebsitesID();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7470762048130469305L;
+
+
+	private UserWebsitesID primaryKey = new UserWebsitesID();
 
 
     private boolean waiting = false;

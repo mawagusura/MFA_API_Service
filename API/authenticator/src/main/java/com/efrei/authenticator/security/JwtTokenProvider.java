@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 @Component
