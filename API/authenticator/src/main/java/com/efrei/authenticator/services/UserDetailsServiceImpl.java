@@ -4,9 +4,9 @@ import com.efrei.authenticator.security.BasicUser;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.JwtAuthenticationDTO;
-import com.efrei.authenticator.dto.LoginRequestDTO;
 import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.model.UserWebsite;
+import com.efrei.authenticator.model.UserWebsitesID;
 import com.efrei.authenticator.model.Website;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
@@ -73,7 +73,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		Optional<User> user = userRepository.findByUsername(username);
 
-		return ResponseEntity.ok(new BasicAPIResponseDTO(true,user.get().getPincode()));
+		return ResponseEntity.ok(new BasicAPIResponseDTO(true, user.get().getPincode()));
 	}
 
 	public ResponseEntity<?> getWebsites(@Valid String username) {
@@ -84,7 +84,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public ResponseEntity<?> register(String username, String password, String email, String pincode) {
 		// Creating user's account
-		User user = new User(username, email, password,pincode);
+		User user = new User(username, email, password, pincode);
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -108,50 +108,63 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public ResponseEntity<?> getWebsitesActionRequired(@Valid String username) {
 
-		Optional<User> user=userRepository.findByUsername(username);
-		ArrayList<Website> listUser=new ArrayList<>();
-		for(UserWebsite usrWeb:user.get().getWebsites()) {
-			if(usrWeb.isWaiting()) {
+		Optional<User> user = userRepository.findByUsername(username);
+		ArrayList<Website> listUser = new ArrayList<>();
+		for (UserWebsite usrWeb : user.get().getWebsites()) {
+			if (usrWeb.isWaiting()) {
 				listUser.add(usrWeb.getWebsite());
 			}
 		}
-		
+
 		return ResponseEntity.ok(listUser);
 	}
 
-	public ResponseEntity<?> login(@Valid LoginRequestDTO login, @Valid String url) {
+	public ResponseEntity<?> login(@Valid User user, @Valid String url) {
+		boolean insideSite = false;
+		UserWebsite usrWebsite=null;
 		Website website = websiteRepository.findByUrl(url);
 		for (UserWebsite usr : website.getUsers()) {
-			if (usr.getUser().getUsername().equals(login.getUsernameOrEmail())
-					|| usr.getUser().getEmail().equals(login.getUsernameOrEmail())
-							&& usr.getUser().getPassword().equals(login.getPassword())) {
-				Authentication authentication = authenticationManager
-						.authenticate(new UsernamePasswordAuthenticationToken(login.getUsernameOrEmail(), login.getPassword()));
-
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-
-				usr.setWaiting(true);
-				websiteRepository.save(website);
-
-				String jwt = tokenProvider.generateToken(authentication);
-				return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
+			if (usr.getUser().getId() == user.getId()) {
+				insideSite = true;
+				usrWebsite = usr;
 			}
-
 		}
-		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login or password invalid"),
-				HttpStatus.BAD_REQUEST);
+		if(!insideSite) {
+			UserWebsitesID userWID=new UserWebsitesID();
+			userWID.setUser(user);
+			userWID.setWebsite(website);
+			
+			UserWebsite userW=new UserWebsite();
+			userW.setWebsite(website);
+			userW.setPrimaryKey(userWID);
+			website.getUsers().add(userW);
+			
+			websiteRepository.save(website);
+			usrWebsite=userW;
+		}
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			usrWebsite.setWaiting(true);
+			websiteRepository.save(website);
+
+			String jwt = tokenProvider.generateToken(authentication);
+			return ResponseEntity.ok(new JwtAuthenticationDTO(jwt));
+
 	}
 
-	public ResponseEntity<?> validate( String url,User user) {
-		for(UserWebsite usr:user.getWebsites()) {
-			if(usr.getWebsite().getUrl().equals(url)){
+	public ResponseEntity<?> validate(String url, User user) {
+		for (UserWebsite usr : user.getWebsites()) {
+			if (usr.getWebsite().getUrl().equals(url)) {
 				usr.setWaiting(false);
 				userRepository.save(user);
 				return ResponseEntity.ok(new BasicAPIResponseDTO(true, "Connection to this website validated."));
 			}
 		}
 		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not register to this site"),
-                HttpStatus.BAD_REQUEST);
+				HttpStatus.BAD_REQUEST);
 	}
 
 }

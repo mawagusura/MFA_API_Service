@@ -3,6 +3,7 @@ package com.efrei.authenticator.controller;
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.LoginRequestDTO;
 import com.efrei.authenticator.dto.SignUpRequestDTO;
+import com.efrei.authenticator.model.User;
 import com.efrei.authenticator.repository.UserRepository;
 import com.efrei.authenticator.repository.WebsiteRepository;
 import com.efrei.authenticator.security.JwtTokenProvider;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -58,7 +61,17 @@ public class AuthenticatorController {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Url invalid"),
 					HttpStatus.BAD_REQUEST);
 		}
-		return service.login(login, url);
+		Optional<User> user=userRepository.findByUsernameOrEmail(login.getUsernameOrEmail(), login.getUsernameOrEmail());
+		if(user.get()==null) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		if(!user.get().getPassword().equals(login.getPassword())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		return service.login(user.get(), url);
 	}
 
     @PostMapping()
