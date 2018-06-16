@@ -8,11 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
 import com.efrei.authenticator.dto.ValidateDTO;
@@ -25,6 +21,8 @@ import com.efrei.authenticator.services.UserDetailsServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -82,6 +80,13 @@ public class UserController {
                     HttpStatus.BAD_REQUEST);
 		}
 		
-		return service.validate(dto.getUrl(),user);
+		return service.validate(dto.getUrl(),user,true);
+	}
+
+	@GetMapping("/websites/terminate")
+	public ResponseEntity<?> terminate(@RequestHeader("url") String url){
+		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		Optional<User> user = userRepository.findByUsername(username);
+		return service.validate(url,user.get(),false );
 	}
 }

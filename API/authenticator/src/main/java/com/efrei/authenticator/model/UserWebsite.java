@@ -25,6 +25,8 @@ public class UserWebsite implements Serializable {
 
 
     private boolean waiting = false;
+    private boolean validated = false;
+
 
     @EmbeddedId
     public UserWebsitesID getPrimaryKey(){
@@ -52,6 +54,12 @@ public class UserWebsite implements Serializable {
     public void setWaiting(boolean waiting) {
         this.waiting = waiting;
     }
+
+    @Column(name = "validated")
+    @Value("${users_websites.validated:false}")
+    public boolean isValidated(){ return validated;}
+
+    public void setValidated(boolean validated){ this.validated=validated;}
 
     @Override
     public String toString(){

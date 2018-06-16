@@ -1,5 +1,6 @@
 package com.efrei.authenticator.services;
 
+import com.efrei.authenticator.dto.LoginRequestDTO;
 import com.efrei.authenticator.security.BasicUser;
 import com.efrei.authenticator.security.JwtTokenProvider;
 import com.efrei.authenticator.dto.BasicAPIResponseDTO;
@@ -119,7 +120,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return ResponseEntity.ok(listUser);
 	}
 
-	public ResponseEntity<?> login(@Valid User user, @Valid String url) {
+	public ResponseEntity<?> login(@Valid User user, @Valid LoginRequestDTO login, @Valid String url) {
 		boolean insideSite = false;
 		UserWebsite usrWebsite=null;
 		Website website = websiteRepository.findByUrl(url);
@@ -135,7 +136,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			userWID.setWebsite(website);
 			
 			UserWebsite userW=new UserWebsite();
-			userW.setWebsite(website);
 			userW.setPrimaryKey(userWID);
 			website.getUsers().add(userW);
 			
@@ -143,7 +143,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			usrWebsite=userW;
 		}
 			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+					.authenticate(new UsernamePasswordAuthenticationToken(login.getUsernameOrEmail(), login.getPassword()));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -155,15 +155,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	}
 
-	public ResponseEntity<?> validate(String url, User user) {
+	public ResponseEntity<?> validate(String url, User user, boolean phone) {
 		for (UserWebsite usr : user.getWebsites()) {
 			if (usr.getWebsite().getUrl().equals(url)) {
-				usr.setWaiting(false);
-				userRepository.save(user);
-				return ResponseEntity.ok(new BasicAPIResponseDTO(true, "Connection to this website validated."));
+				if(phone){
+					usr.setValidated(true);
+					userRepository.save(user);
+					return ResponseEntity.ok(new BasicAPIResponseDTO(true, "Connection to this website validated."));
+				}
+				else if(usr.isValidated() && usr.isWaiting()){
+					usr.setWaiting(false);
+					usr.setValidated(false);
+					userRepository.save(user);
+					return ResponseEntity.ok(new BasicAPIResponseDTO(true, "Connection to this website validated."));
+				}
 			}
 		}
-		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "User not register to this site"),
+		return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, phone ? "User not register to this site" : "Website not validated yet"),
 				HttpStatus.BAD_REQUEST);
 	}
 

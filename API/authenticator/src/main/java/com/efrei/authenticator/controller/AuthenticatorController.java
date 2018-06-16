@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -43,6 +44,9 @@ public class AuthenticatorController {
 	@Autowired
 	UserDetailsServiceImpl service;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 	@PostMapping("/token")
 	@ApiOperation("Create token based on login entity")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class) })
@@ -66,12 +70,14 @@ public class AuthenticatorController {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
 					HttpStatus.BAD_REQUEST);
 		}
-		if(!user.get().getPassword().equals(login.getPassword())) {
-			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+		if(passwordEncoder.matches(user.get().getPassword(),login.getPassword())) {
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Password invalid"),
 					HttpStatus.BAD_REQUEST);
 		}
-		
-		return service.login(user.get(), url);
+
+
+
+		return service.login(user.get(), login, url);
 	}
 
     @PostMapping()

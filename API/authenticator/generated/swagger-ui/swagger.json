@@ -340,11 +340,14 @@
         "waiting" : {
           "type" : "boolean"
         },
-        "user" : {
-          "$ref" : "#/definitions/User"
+        "validated" : {
+          "type" : "boolean"
         },
         "website" : {
           "$ref" : "#/definitions/Website"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
         }
       }
     },
