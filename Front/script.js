@@ -39,9 +39,8 @@ $(function () {
     function getReferrer(){
         let searchParams = new URLSearchParams(window.location.search);
         let url = searchParams.get("url");
-        //if(!url)return document.referrer;
-        //else return url;
-        return "url.com";
+        if(!url)return document.referrer;
+        else return url;
     }
 
     //Event du click
