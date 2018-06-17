@@ -74,7 +74,13 @@ public class UserController {
                     HttpStatus.BAD_REQUEST);
 		}
 		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		User user = userRepository.findByUsername(username).get();
+		Optional<User> userO = userRepository.findByUsername(username);
+		if(!userO.isPresent()){
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
+		User user = userO.get();
+
 		if(!dto.getPinCode().equals(user.getPincode())) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Code invalid"),
                     HttpStatus.BAD_REQUEST);
@@ -87,6 +93,11 @@ public class UserController {
 	public ResponseEntity<?> terminate(@RequestHeader("url") String url){
 		String username =((BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		Optional<User> user = userRepository.findByUsername(username);
+
+		if(!user.isPresent()){
+			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
+					HttpStatus.BAD_REQUEST);
+		}
 		return service.validate(url,user.get(),false );
 	}
 }

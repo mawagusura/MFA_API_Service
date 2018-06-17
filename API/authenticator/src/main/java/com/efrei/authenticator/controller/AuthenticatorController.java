@@ -66,7 +66,7 @@ public class AuthenticatorController {
 					HttpStatus.BAD_REQUEST);
 		}
 		Optional<User> user=userRepository.findByUsernameOrEmail(login.getUsernameOrEmail(), login.getUsernameOrEmail());
-		if(user.get()==null) {
+		if(!user.isPresent()) {
 			return new ResponseEntity<BasicAPIResponseDTO>(new BasicAPIResponseDTO(false, "Login invalid"),
 					HttpStatus.BAD_REQUEST);
 		}
