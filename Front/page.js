@@ -8,7 +8,7 @@ $(function () {
 
         $.ajax({
             type: "GET",
-            url: "http://authenticator-efrei.azurewebsites.net/api/users/websites/terminate",
+            url: "https://authenticator-efrei.azurewebsites.net/api/users/websites/terminate",
             headers: { 
                 "url": url,
                 "Authorization" : "Bearer "+token

@@ -8,7 +8,7 @@ $(function () {
 
         $.ajax({
             type: "POST",
-            url: "http://authenticator-efrei.azurewebsites.net/api/auth/",
+            url: "https://authenticator-efrei.azurewebsites.net/api/auth/",
             data: JSON.stringify(markers),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
