@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Register</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="register.js"></script>
+
+    <div class="container text-center">
+        <div class="jumbotron">
+            <h1>Efrei Authenticator</h1>
+        </div>
+
+        <form id="form-register" class="form-signin">
+            <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+
+            <p id="error"></p>
+
+            <label for="username" class="sr-only">Login</label>
+            <input type="username" id="username" class="form-control" placeholder="Login">
+
+            <label for="email" class="sr-only">Login</label>
+            <input type="email" id="email" class="form-control" placeholder="E-mail">
+
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Password">
+
+            <label for="pinCode" class="sr-only">Pincode</label>
+            <input id="pinCode" class="form-control last" type="tel" placeholder="Pincode">
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="button">Register</button>
+
+
+            <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+        </form>
+
+    </div>
+</body>
+
+</html>

@@ -14,31 +14,40 @@
     crossorigin="anonymous">
 
   <!-- Custom styles for this template -->
-  <link href="signin.css" rel="stylesheet">
+  <link href="Front/signin.css" rel="stylesheet">
 
 
 </head>
 
-<body class="text-center">
+<body>
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  <script src="Front/script.js"></script>
 
-  <form class="form-signin">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+  <div class="container text-center">
+    <div class="jumbotron">
+      <h1>Efrei Authenticator</h1>
+    </div>
 
-    <label for="inputEmail" class="sr-only">Login</label>
-    <input type="username" id="usernameOrEmail" class="form-control" placeholder="Login">
+    <form id="form" class="form-signin">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="password" class="form-control" placeholder="Password">
+      <p id="error"></p>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit" id="button">Sign in</button>
-    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
-  </form>
+      <label for="usernameOrEmail" class="sr-only">Login</label>
+      <input type="username" id="usernameOrEmail" class="form-control" placeholder="Username or E-mail">
 
-  <script>
-    $(document).ready(function () { var referrer = document.referrer; alert(referrer); });
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" class="form-control last" placeholder="Password">
 
-  </script>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" id="button">Sign in</button>
+      <button class="btn btn-lg btn-success btn-block" id="register">Register</button>
+      
+
+
+      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+    </form>
+  </div>
+
 </body>
 
 </html>
