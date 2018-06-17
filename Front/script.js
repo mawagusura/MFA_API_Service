@@ -1,15 +1,16 @@
 $(function () {
     
+
     //Envoie du JSON a l'api pour check si le login et le mdp est corect
     //Manque une entete, probleme de CORS
     function sendInfo(login, password) {
         var markers = { "usernameOrEmail": login, "password": password };
-        
+
 
         $.ajax({
             type: "POST",
             url: "https://authenticator-efrei.azurewebsites.net/api/auth/login",
-            headers: { "url": getReferrer() },
+            headers: { "url": referrer() },
             data: JSON.stringify(markers),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -19,7 +20,7 @@ $(function () {
             },
 
             // implementé ici les succes et fail
-            success: function (data) { window.location.href ="Front/waiting-validation.html?url="+getReferrer()+'&token='+data.accessToken },
+            success: function (data) { window.location.href ="Front/waiting-validation.html?url="+referrer()+'&token='+data.accessToken },
             error: function (errMsg) { printError(errMsg); }//TODO
         });
     }
@@ -36,12 +37,16 @@ $(function () {
         return login;
     }
 
-    function getReferrer(){
+    var referrer = function() {
         let searchParams = new URLSearchParams(window.location.search);
         let url = searchParams.get("url");
-        if(!url)return document.referrer;
+        console.log(url);
+        if(!url && document.referrer){
+            return document.referrer;
+        }
         else return url;
     }
+    console.log(referrer());
 
     //Event du click
     $('#form').submit(function(e) {
@@ -56,7 +61,7 @@ $(function () {
 
     $('#register').click(function(e){
         e.preventDefault();
-        window.location.href = "Front/register.html?url"+getReferrer;
+        window.location.href = "Front/register.html?url="+referrer();
     })
 
     
